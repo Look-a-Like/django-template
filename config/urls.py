@@ -18,10 +18,14 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import RedirectView
 
 from drf_spectacular.views import (SpectacularAPIView, SpectacularSwaggerView)
 
 urlpatterns = [
+    # Redirect root to API docs
+    path('', RedirectView.as_view(url='/api/docs/', permanent=False)),
+    
     path('admin/', admin.site.urls),
     # Include your other app URLs here, e.g.:
     path('app_1/', include('apps.app_1.urls')),
@@ -30,9 +34,11 @@ urlpatterns = [
     # Schema View: Generates the OpenAPI schema
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     # Swagger UI: Renders the schema in a user-friendly interface
-    path('', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 
     # You can also add Redoc if you prefer:
     # from drf_spectacular.views import SpectacularRedocView
     # path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+
+    path('api/', include('apps.Customer.urls')),
 ]
